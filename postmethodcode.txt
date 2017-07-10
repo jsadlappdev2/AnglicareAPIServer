@@ -1,0 +1,97 @@
+ [HttpPost]
+        [ActionName("AddEmployee")]
+        public HttpResponseMessage AddEmployee([FromBody] Employeedetails employee)
+        {
+            //check employee number
+           // int count = 0;
+           // count = check_employee_number(employee.id_number);
+           // if (count >= 1)
+           // {
+
+              //  return Request.CreateErrorResponse(HttpStatusCode.NotFound, " Employee has existed and Insert didn't execute.");
+           // }
+           // else
+           // {
+
+                SqlConnection myConnection = new SqlConnection();
+                myConnection.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+
+                SqlCommand sqlCmd = new SqlCommand();
+                sqlCmd.CommandType = CommandType.Text;
+                sqlCmd.CommandText = "INSERT INTO employee_for_test (id_number,given_name,family_name,preferred_name,gender) Values (@idnumber,@givenname,@familyname,@preferredname,@gender)";
+                sqlCmd.Connection = myConnection;
+
+
+                sqlCmd.Parameters.AddWithValue("@idnumber", employee.id_number);
+                sqlCmd.Parameters.AddWithValue("@givenname", employee.given_name);
+                sqlCmd.Parameters.AddWithValue("@familyname", employee.family_name);
+                sqlCmd.Parameters.AddWithValue("@preferredname", employee.preferred_name);
+                sqlCmd.Parameters.AddWithValue("@gender", employee.gender);
+                myConnection.Open();
+                try
+                {
+                
+                    int rowInserted = sqlCmd.ExecuteNonQuery();
+                //  return Request.CreateErrorResponse(HttpStatusCode.OK, "Employee " + employee.id_number.ToString() + " has been created!");
+                 
+                var message = new HttpResponseMessage(HttpStatusCode.Created);
+                message.Content = new StringContent("Employee is created");
+                return new HttpResponseMessage { StatusCode = HttpStatusCode.Created };
+
+                }
+                catch (Exception)
+                {
+
+                //  return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error occured while executing AddEmployee.");
+                var message = new HttpResponseMessage(HttpStatusCode.NotAcceptable);
+                message.Content = new StringContent("Failed");
+                return new HttpResponseMessage { StatusCode = HttpStatusCode.NotAcceptable };
+
+                }
+                finally
+                {
+                    myConnection.Close();
+                }
+
+          //  }
+      
+
+        }
+
+
+
+
+		
+
+ [HttpPost]
+        [ActionName("AddEmployee")]
+        public void AddEmployee(Employeedetails employee)
+        {
+           
+
+                SqlConnection myConnection = new SqlConnection();
+                myConnection.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+
+                SqlCommand sqlCmd = new SqlCommand();
+                sqlCmd.CommandType = CommandType.Text;
+                sqlCmd.CommandText = "INSERT INTO employee_for_test (id_number,given_name,family_name,preferred_name,gender) Values ('1111','test','test','test','m')";
+                sqlCmd.Connection = myConnection;
+
+
+               // sqlCmd.Parameters.AddWithValue("@idnumber", employee.id_number);
+              //  sqlCmd.Parameters.AddWithValue("@givenname", employee.given_name);
+              //  sqlCmd.Parameters.AddWithValue("@familyname", employee.family_name);
+              //  sqlCmd.Parameters.AddWithValue("@preferredname", employee.preferred_name);
+              //  sqlCmd.Parameters.AddWithValue("@gender", employee.gender);
+                myConnection.Open();
+               
+                
+                    int rowInserted = sqlCmd.ExecuteNonQuery();
+             
+
+             
+
+       
+      
+
+        }
